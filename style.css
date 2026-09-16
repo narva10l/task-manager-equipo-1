@@ -1,0 +1,10 @@
+body{
+    background-color: #dd9b9b9c;
+}
+H1{
+    color: #717a12;
+}
+.completed .task-text {
+  text-decoration: line-through;
+  color: gray;
+}
