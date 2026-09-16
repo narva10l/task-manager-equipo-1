@@ -29,6 +29,12 @@ function renderTasks() {
     span.classList.add('task-text');
     span.addEventListener('click', () => toggleComplete(index));
 
+    // Botón editar
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'Editar';
+    editBtn.classList.add('edit-btn');
+    editBtn.addEventListener('click', () => editTask(index, li));
+
     // Botón eliminar
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'Eliminar';
@@ -36,6 +42,7 @@ function renderTasks() {
     deleteBtn.addEventListener('click', () => deleteTask(index));
 
     li.appendChild(span);
+    li.appendChild(editBtn);
     li.appendChild(deleteBtn);
     taskList.appendChild(li);
   });
@@ -70,6 +77,47 @@ function deleteTask(index) {
   renderTasks();
 }
 
+// Editar tarea: reemplaza el <li> por un input editable
+function editTask(index, li) {
+  const currentText = tasks[index].text;
+
+  li.innerHTML = '';
+
+  const editInput = document.createElement('input');
+  editInput.type = 'text';
+  editInput.value = currentText;
+  editInput.classList.add('edit-input');
+
+  const saveBtn = document.createElement('button');
+  saveBtn.textContent = 'Guardar';
+  saveBtn.classList.add('save-btn');
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.textContent = 'Cancelar';
+  cancelBtn.classList.add('cancel-btn');
+
+  function saveEdit() {
+    const newText = editInput.value.trim();
+    if (newText === '') {
+      alert('La tarea no puede quedar vacía.');
+      return;
+    }
+    tasks[index].text = newText;
+    renderTasks();
+  }
+
+  saveBtn.addEventListener('click', saveEdit);
+  cancelBtn.addEventListener('click', () => renderTasks());
+  editInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') saveEdit();
+  });
+
+  li.appendChild(editInput);
+  li.appendChild(saveBtn);
+  li.appendChild(cancelBtn);
+  editInput.focus();
+}
+
 // Guardar tareas en localStorage
 function saveTasks() {
   localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -84,4 +132,4 @@ taskInput.addEventListener('keypress', (e) => {
 });
 
 // Renderizar tareas al cargar la página
-document.addEventListener('DOMContentLoaded', renderTasks);
+document.addEventListener('DOMContentLoaded', renderTasks); 
